@@ -1,0 +1,35 @@
+﻿<Properties RefactoringSettings.EnableRefactorings="True" StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Controllers\WorldController.cs">
+    <Files>
+      <File FileName="Assets\Models\Furniture.cs" Line="49" Column="1" />
+      <File FileName="Assets\Models\World.cs" Line="64" Column="40" />
+      <File FileName="Assets\Models\Tile.cs" Line="72" Column="1" />
+      <File FileName="Assets\Controllers\MouseController.cs" Line="107" Column="63" />
+      <File FileName="Assets\Controllers\WorldController.cs" Line="38" Column="32" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Project Procupine" expanded="True">
+            <Node name="Assembly-CSharp" expanded="True">
+              <Node name="Controllers" expanded="True">
+                <Node name="WorldController.cs" selected="True" />
+              </Node>
+              <Node name="Models" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State name="__root__">
+          <Node name="Project Procupine" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
