@@ -27,6 +27,8 @@ public class Tile {
 		}
 	}
 
+	public Job pendingFurnitureJob;
+
  // Default to empty floor
 
 	// Self awareness.
@@ -73,5 +75,27 @@ public class Tile {
 		// Everything is fine
 		furniture = instance;
 		return true;
+	}
+
+	// Tells us if the given tile is adjacent
+	public bool IsNeighbour(Tile tile, bool checkDiag) {
+		if (tile.x == x && Mathf.Abs (tile.y - y) == 1) {
+			return true;
+		}
+
+		if (tile.y == y && Mathf.Abs (tile.x - x) == 1) {
+			return true;
+		}
+
+		if (checkDiag) {
+			// True if both x and y differ by 1
+			if ( Mathf.Abs (tile.x - x) == 1 && Mathf.Abs (tile.y - y) == 1) {
+				return true;
+			}
+
+		}
+
+		return false;
+		
 	}
 }

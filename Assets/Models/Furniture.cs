@@ -39,7 +39,7 @@ public class Furniture {
 		obj.linksToNeighbour = linksToNeighbour;
 
 		// Default the positionvalidation funciton to check whether the tile has floors.
-		obj.funcPositionValidation = obj.isValidPosition;
+		obj.funcPositionValidation = obj.__isValidPosition;
 
 		return obj;
 	}
@@ -110,7 +110,12 @@ public class Furniture {
 		this.cbOnChanged -= callbackFunc;
 	}
 
-	public bool isValidPosition(Tile t) {
+	public bool IsValidPosition(Tile t) {
+		return funcPositionValidation(t);
+	}
+
+	//FIXME: These functions should never be called directly.
+	public bool __isValidPosition(Tile t) {
 		// Make sure the tile we're trying to build on is FLOOR
 		if (t.Type != Tile.TileType.Floor) {
 			return false;

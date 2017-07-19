@@ -7,20 +7,16 @@ public class MouseController : MonoBehaviour {
 
 	public GameObject circleCursor;
 
-	bool buildModeObjects = false;
-	string buildModeObjectType;
-	Tile.TileType buildModeTile = Tile.TileType.Floor;
 	Vector3 lastFramePosition;
 	Vector3 currFramePostion;
+
 	Vector3 dragStartPosition;
 	List<GameObject> dragCircleCursorList;
-	bool isDragging;
 
 	public float scrollSensitivity = 1f;
 	// Use this for initialization
 	void Start () {
 		dragCircleCursorList = new List<GameObject> ();
-//		ObjectPooler.Preload (circleCursor, 900);
 	}
 	
 	// Update is called once per frame
@@ -38,19 +34,12 @@ public class MouseController : MonoBehaviour {
 		lastFramePosition.z = 0;
 	}
 
-	void updateCursor() {
-		// Update cursorcircle position -- Snap to tile.
-		Tile tileUnderMouse = this.GetTileAtWorldCoord(currFramePostion);
-		if (tileUnderMouse != null) {
-			circleCursor.SetActive (true);
-			Vector3 cursorPosition = new Vector3 (tileUnderMouse.X, tileUnderMouse.Y, 0);
-			circleCursor.transform.position = cursorPosition;
-		} else {
-			circleCursor.SetActive (false);
-		}
-	}
-
 	void updateDrag() {
+		// If we're over a UI element, then bail out from this.
+		if (EventSystem.current.IsPointerOverGameObject ()) {
+			return;
+		}
+
 		// Clear old selection
 		foreach (GameObject cc in dragCircleCursorList) {
 			ObjectPooler.Despawn (cc);
@@ -78,12 +67,11 @@ public class MouseController : MonoBehaviour {
 			end_y = start_y;
 			start_y = temp_y;
 		}
-
 		// While dragging
 		if (Input.GetMouseButton(0)) {
 			for (int x = start_x; x <= end_x; x++) {
 				for (int y = start_y; y <= end_y; y++) {
-					Tile t = WorldController.Instance.World.GetTileAt (x, y);
+					Tile t = WorldController.Instance.world.GetTileAt (x, y);
 					if (t != null) {
 						GameObject go = ObjectPooler.Spawn (circleCursor, new Vector3 (x, y, 0), Quaternion.identity);
 						go.transform.SetParent (this.transform, true);
@@ -95,25 +83,24 @@ public class MouseController : MonoBehaviour {
 
 		// End drag
 		if (Input.GetMouseButtonUp (0)) {
+
+			BuildModeController bmc = GameObject.FindObjectOfType<BuildModeController> ();
+
 			for (int x = start_x; x <= end_x; x++) {
 				for (int y = start_y; y <= end_y; y++) {
-
-					Tile t = WorldController.Instance.World.GetTileAt (x, y);
+					Tile t = WorldController.Instance.world.GetTileAt (x, y);
 					if (t != null) {
-						if (buildModeObjects) {
-							// Create installed object and assign to tile
-
-							//FIXME: right now we are just doing walls;
-							WorldController.Instance.World.PlaceFurniture (buildModeObjectType, t);
-
-						} else {
-							// We are in tile changing mode;
-							t.Type = buildModeTile;
-						}
+						// Call BuildModeController::DoBuild() 
+						bmc.DoBuild (t);
 					}
 				}
 			}
 		}
+	}
+
+	void OnFurnitureJobComplete( string buildModeObjectType, Tile t) {
+		WorldController.Instance.world.PlaceFurniture (buildModeObjectType, t);
+
 	}
 
 	void updateCamera() {
@@ -125,31 +112,5 @@ public class MouseController : MonoBehaviour {
 		if (Input.GetMouseButton(2) || Input.GetMouseButton(1)) {
 			Camera.main.transform.Translate(lastFramePosition - currFramePostion);
 		}
-
-
-	}
-
-	Tile GetTileAtWorldCoord(Vector3 pos) {
-		int x = Mathf.FloorToInt (pos.x);
-		int y = Mathf.FloorToInt (pos.y);
-
-		// Get world instance
-		return GameObject.FindObjectOfType<WorldController>().World.GetTileAt(x,y);
-	}
-
-
-	public void SetMode_BuildFloor() {
-		buildModeObjects = false;
-		buildModeTile = Tile.TileType.Floor;
-	}
-
-	public void SetMode_EraseFloor() {
-		buildModeObjects = false;
-		buildModeTile = Tile.TileType.Empty;
-	}
-
-	public void SetMode_BuildFurniture(string objType) {
-		buildModeObjects = true;
-		buildModeObjectType = objType;
 	}
 }
